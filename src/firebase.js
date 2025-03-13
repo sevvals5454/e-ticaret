@@ -16,7 +16,6 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Firebase yapılandırması (güncel bilgiler Firebase Console’dan alınmalı)
 const firebaseConfig = {
   apiKey: "AIzaSyAUY_FLTATDNO5jjE4tB6hwkUt3Wv-B3OE",
   authDomain: "e-ticaret-7471e.firebaseapp.com",
@@ -31,13 +30,11 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Kullanıcı verisini işleyen yardımcı fonksiyon (herhangi bir UI güncellemesi yapabilirsiniz)
 const userHandle = (data) => {
   console.log("Kullanıcı verisi:", data);
 };
 
-// Tek bir onAuthStateChanged dinleyicisi: kullanıcı giriş/çıkış durumunu izler,
-// eğer kullanıcı giriş yaptıysa Firestore'da yoksa ekler.
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     try {
@@ -69,14 +66,12 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// reCAPTCHA doğrulayıcısı için global değişken
 let recaptchaVerifier;
 
-// reCAPTCHA'yı başlatan yardımcı fonksiyon
 const initRecaptcha = async () => {
   if (!recaptchaVerifier) {
     recaptchaVerifier = new RecaptchaVerifier(
-      "recaptcha-container", // HTML'de bu ID'ye sahip bir div olmalı
+      "recaptcha-container", 
       {
         size: "invisible",
         callback: (response) => {
@@ -107,11 +102,9 @@ const initRecaptcha = async () => {
   }
 };
 
-// Telefon ile giriş işlemi için fonksiyon
 export const login = async (phoneNumber) => {
   try {
     await initRecaptcha();
-    // Telefon numarası ile giriş yap ve OTP gönderimi başlat
     const confirmationResult = await signInWithPhoneNumber(
       auth,
       phoneNumber,
@@ -125,7 +118,6 @@ export const login = async (phoneNumber) => {
   }
 };
 
-// Kullanıcı bilgilerini alma işlemi (kullanıcı adı üzerinden)
 export const getUserInfo = async (uname) => {
   const usernameSnap = await getDoc(doc(db, "usernames", uname));
   if (usernameSnap.exists()) {
